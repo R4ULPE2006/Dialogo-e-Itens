@@ -6,7 +6,7 @@ public class PlayerRay : MonoBehaviour
     public LayerMask roundLayer;
     bool cursorOnGround;
     PlayerInteractions playerInteractions;
-    
+
     void Start()
     {
         playerInteractions = GetComponent<PlayerInteractions>();
@@ -19,15 +19,12 @@ public class PlayerRay : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (((1<< hit.collider.gameObject.layer)& roundLayer)!=0)
+            if (((1 << hit.collider.gameObject.layer) & roundLayer) != 0)
             {
                 cursorOnGround = true;
                 playerInteractions.CancelInteraction();
             }
-            else
-            {
-                cursorOnGround = false;
-            }
+            //else         {                cursorOnGround = false;            }
         }
         else
         {

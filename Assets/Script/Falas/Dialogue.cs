@@ -9,7 +9,7 @@ public class Dialogue : ScriptableObject
     public string playerAnswer;
     public Sprite portrait;
     public bool isEnd;
-    //public Item conditionItem; //Caso seja necessário um item
+    public Item conditionItem; //Caso seja necessário um item
     public Dialogue[] answers;
 
 }
