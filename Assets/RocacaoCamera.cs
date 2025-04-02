@@ -16,6 +16,8 @@ public class RotacaoCamera : MonoBehaviour
     float alturaCamera;
     bool estaAgachado = false;
     private float rotacaoX;
+    public bool podeRotacionar = true;
+
 
     void Start()
     {
@@ -40,6 +42,8 @@ public class RotacaoCamera : MonoBehaviour
 
     private void RotacionarJogador()
     {
+        if (!podeRotacionar)
+            return;
         float mouseX = Input.GetAxisRaw("Mouse X") * sensiMouse * Time.deltaTime;
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensiMouse * Time.deltaTime;
 

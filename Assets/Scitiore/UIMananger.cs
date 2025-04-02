@@ -20,6 +20,7 @@ public class UiManager : MonoBehaviour
         "3. dialogue\n" +
         "4. collectable\n" +
         "5. none\n")]
+    public Button sairButton; // Arraste o botão no Inspector
 
     public Sprite[] cursors;
 
@@ -55,6 +56,7 @@ public class UiManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject); // Para não destruir entre cenas, se necessário
+        sairButton.onClick.AddListener(FinishDialogue);
     }
 
 
@@ -72,37 +74,37 @@ public class UiManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Mudando crosshair para " + objectType);  // Log para ver se o código entra aqui
+       // Debug.Log("Mudando crosshair para " + objectType);  // Log para ver se o código entra aqui
 
         switch (objectType)
         {
             case ObjectType.ground:
-                Debug.Log("Configuring crosshair for ground.");
+                //Debug.Log("Configuring crosshair for ground.");
                 instance.crosshairImage.sprite = instance.cursors[0];
                 break;
 
             case ObjectType.door:
-                Debug.Log("Configuring crosshair for door.");
+                //Debug.Log("Configuring crosshair for door.");
                 instance.crosshairImage.sprite = instance.cursors[1];
                 break;
 
             case ObjectType.text:
-                Debug.Log("Configuring crosshair for text.");
+                //Debug.Log("Configuring crosshair for text.");
                 instance.crosshairImage.sprite = instance.cursors[2];
                 break;
 
             case ObjectType.dialogue:
-                Debug.Log("Configuring crosshair for dialogue.");
+                //Debug.Log("Configuring crosshair for dialogue.");
                 instance.crosshairImage.sprite = instance.cursors[3];
                 break;
 
             case ObjectType.collectable:
-                Debug.Log("Configuring crosshair for collectable.");
+                //Debug.Log("Configuring crosshair for collectable.");
                 instance.crosshairImage.sprite = instance.cursors[4];
                 break;
 
             default:
-                Debug.Log("Configuring default crosshair.");
+                //Debug.Log("Configuring default crosshair.");
                 instance.crosshairImage.sprite = instance.cursors[5];
                 break;
         }
@@ -117,14 +119,17 @@ public class UiManager : MonoBehaviour
         if (instance == null)
             return;
 
-        instance.portrait.sprite = instance.playerPortrait;
+        EnableMouse();
+        FindFirstObjectByType<RotacaoCamera>().podeRotacionar = false; 
 
+        instance.portrait.sprite = instance.playerPortrait;
+        instance.sairButton.gameObject.SetActive(true);
         if (interactable.conditionalItem != null)
         {
-            Debug.Log("Tem conditional item");
+            // Debug.Log("Tem conditional item");
             if (Inventory.HasItem(interactable.conditionalItem))
             {
-                Debug.Log("Tem item");
+               // Debug.Log("Tem item");
                 instance.interactionText.text = interactable.conditionalText;
                 if (interactable.useItem)
                 {
@@ -137,13 +142,13 @@ public class UiManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Não tem item");
+               // Debug.Log("Não tem item");
                 instance.interactionText.text = interactable.text;
             }
         }
         else
         {
-            Debug.Log("Não tem conditional item");
+           // Debug.Log("Não tem conditional item");
             instance.interactionText.text = interactable.text;
         }
         if (interactable.audioClip != null)
@@ -152,6 +157,21 @@ public class UiManager : MonoBehaviour
         instance.interactionPanel.SetActive(true);
         instance.textInteractable = interactable;
     }
+    public static void FinishText()
+    {
+        if (instance == null)
+            return;
+
+        instance.inDialogue = false;
+
+        DisableMouse();
+        FindFirstObjectByType<RotacaoCamera>().podeRotacionar = true;
+
+        // Desativa o painel de interação e o botão "Sair"
+        instance.interactionPanel.SetActive(false);
+        instance.sairButton.gameObject.SetActive(false);
+    }
+
 
     public static void DisableInteraction()
     {
@@ -184,10 +204,13 @@ public class UiManager : MonoBehaviour
         }
     }
 
+
     public static void SetDialogue(Dialogue dialogue)
     {
         if (instance == null)
             return;
+
+        instance.sairButton.gameObject.SetActive(true);
 
         if (dialogue.isEnd)
         {
@@ -203,6 +226,10 @@ public class UiManager : MonoBehaviour
         DisableInteraction();
         instance.portrait.sprite = dialogue.portrait;
         instance.interactionText.text = dialogue.dialogueText;
+
+        EnableMouse(); // Habilita o mouse
+        FindFirstObjectByType<RotacaoCamera>().podeRotacionar = false; // Bloqueia a rotação da câmera
+
 
         for (int i = 0; i < instance.answersTexts.Length; i++)
         {
@@ -239,13 +266,25 @@ public class UiManager : MonoBehaviour
 
         if (SoundManager.instance != null)
             SoundManager.PlaySound(SoundManager.instance.finishDialogue);
+
         instance.inDialogue = false;
+
+        // Fecha o painel de interação
+        instance.interactionPanel.SetActive(false);
+
+        // Bloqueia o mouse e libera a rotação da câmera
+        DisableMouse();
+        FindFirstObjectByType<RotacaoCamera>().podeRotacionar = true;
+        instance.sairButton.gameObject.SetActive(false); // Esconde o botão
+
         for (int i = 0; i < instance.answersTexts.Length; i++)
         {
             instance.answersTexts[i].gameObject.SetActive(false);
         }
+
         DisableInteraction();
     }
+
 
     public static void SetInfoText(string text)
     {
@@ -279,5 +318,18 @@ public class UiManager : MonoBehaviour
             }
         }
     }
+
+    public static void EnableMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public static void DisableMouse()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
 
 }

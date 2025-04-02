@@ -29,6 +29,7 @@ public class Inventory : MonoBehaviour
             return;
 
         instance.items.Add(item);
+        //Debug.Log("Item adicionado: " + item.name);
         UiManager.SetInventoryImage(item);
     }
 
@@ -48,7 +49,7 @@ public class Inventory : MonoBehaviour
 
         return instance.items.Contains(item);
     }
-public void AddItem(Item item)
+    public void AddItem(Item item)
     {
         if (item != null)
         {

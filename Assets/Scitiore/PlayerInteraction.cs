@@ -29,7 +29,7 @@ public class PlayerInteraction : MonoBehaviour
             var interactable = hit.collider.GetComponent<Interactable>();
             if (interactable != null)
             {
-                Debug.Log("Objeto interativo detectado: " + interactable.objectType);
+                //Debug.Log("Objeto interativo detectado: " + interactable.objectType);
                 UiManager.SetCursor(interactable.objectType);  // Altera o cursor (crosshair) para o tipo do objeto
                 if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -46,7 +46,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             // Se não detectar um objeto interativo, volta ao crosshair padrão
             UiManager.SetCursor(ObjectType.none);
-            Debug.Log("Nenhum objeto interativo detectado.");
+            //Debug.Log("Nenhum objeto interativo detectado.");
         }
 
 
@@ -77,7 +77,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("playerCamera não foi inicializada. Gizmos não desenhados.");
+             Debug.LogWarning("playerCamera não foi inicializada. Gizmos não desenhados.");
         }
     }
 }
