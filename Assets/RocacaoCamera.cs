@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
 
+using TMPro;
+using UnityEngine.UI;
 public class RotacaoCamera : MonoBehaviour
 {
 
@@ -22,7 +23,10 @@ public class RotacaoCamera : MonoBehaviour
     void Start()
     {
         //csMovimentaJogador = FindFirstObjectByType<MovimentaJogador>();
-   
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+
     }
 
     void Update()
